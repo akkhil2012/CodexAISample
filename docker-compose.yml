@@ -1,0 +1,28 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      CHARACTER_ID_ADMIN_USER: "admin"
+      CHARACTER_ID_ADMIN_PASSWORD: "admin"
+      CHARACTER_ID_QDRANT_URL: "http://qdrant:6333"
+    volumes:
+      - ./backend/data:/app/data
+    depends_on:
+      - qdrant
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+  qdrant:
+    image: qdrant/qdrant:v1.10.1
+    ports:
+      - "6333:6333"
+    volumes:
+      - qdrant_data:/qdrant/storage
+
+volumes:
+  qdrant_data:
